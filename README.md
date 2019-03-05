@@ -27,7 +27,7 @@ Including an example of how to use your role (for instance, with variables passe
           scripts_dir: /opt/scripts
           your_email: example@gmail.com
           relay_ip: x.x.x.x
-...
+    ...
 
 Author Information
 ------------------
