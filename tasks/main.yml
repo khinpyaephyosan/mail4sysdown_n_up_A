@@ -1,0 +1,72 @@
+---
+# tasks file for mailme
+ - name: check /opt/scripts file
+   stat:
+     path: /opt/scripts
+   register: file 
+
+ - name: create /opt/scripts file
+   file:
+     path: "{{ scripts_dir }}"
+     state: directory
+   when: file.stat.exists == False
+
+ - name: copy scripts file
+   template: 
+     src: "{{ item }}.j2"
+     dest: "{{ scripts_dir }}/{{ item }}"
+     owner: root
+     group: root
+     mode: 0755
+   with_items:
+     - startupmail.sh
+     - shutdownmail.sh
+ 
+ - name: check mailx
+   shell:
+     cmd: rpm -qa mailx
+   register: mailx
+
+ - name: mount Centos 7.3 ISO
+   mount: 
+     path: /media/iso
+     src: /dev/cdrom
+     fstype: iso9660
+     opts: ro,noauto
+     state: present
+   when: mailx.rc == 0
+   ignore_errors: yes
+
+ - name: install mailx
+   yum:
+     name: mailx
+     state: latest
+   when: mailx.rc == 0
+
+ - name: copy mailme.service file 
+   template:
+     src: mailme.service.j2
+     dest: /etc/systemd/system/mailme.service
+     owner: root
+     group: root
+     mode: 0644
+   notify: release service
+   when: mailx.rc == 0
+
+ - name: check postfix
+   shell:
+     cmd: rpm -qa postfix
+   register: postfix
+ 
+ - name: install postfix
+   yum:
+     name: postfix
+     state: latest
+   when: postfix.rc == 0
+ 
+ - name: configure postfix
+   lineinfile:
+        path: /etc/postfix/main.cf
+        line: "\nrelayhost = [{{ relay_ip }}]"
+   notify: release postfix
+...

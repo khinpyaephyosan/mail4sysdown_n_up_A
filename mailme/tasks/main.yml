@@ -1,0 +1,28 @@
+---
+# tasks file for mailme
+ - name: create /opt/scripts file
+   file:
+     path: "{{ scripts_dir }}"
+     state: directory
+
+ - name: copy scripts file
+   template: 
+     src: "{{ item }}.j2"
+     dest: "{{ scritps_dir }}/{{ item }}"
+     owner: root
+     group: root
+     mode: 0755
+   with_items:
+     - startupmail.sh
+     - shutdownmail.sh
+
+ - name: copy mailme.service file 
+   template:
+     src: mailme.service.j2
+     dest: /etc/systemd/system/mailme.service
+     owner: root
+     group: root
+     mode: 0644
+   notify: release service
+
+...

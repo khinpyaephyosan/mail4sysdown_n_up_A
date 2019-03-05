@@ -1,0 +1,14 @@
+---
+# handlers file for mailme
+ - name: release service
+   service:
+     name: mailme
+     enabled: yes
+     state: started
+
+ - name: release postfix
+   service:
+     name: postfix
+     enabled: yes
+     state: started
+...

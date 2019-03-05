@@ -1,0 +1,3 @@
+#!/bin/bash
+DATE=$(date '+%Y-%m-%d %H:%M:%S')
+$(mail -s "$HOSTNAME - System Start" {{ your_email }}  <<< "$HOSTNAME was started at $DATE")

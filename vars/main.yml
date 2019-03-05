@@ -1,0 +1,7 @@
+---
+# vars file for mailme
+vars_prompt:
+  - name: "scripts_dir"
+    prompt: "Please set your script directory!"
+    default: "/opt/scripts"
+... 

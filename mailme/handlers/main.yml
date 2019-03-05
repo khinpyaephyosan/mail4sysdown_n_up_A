@@ -1,0 +1,8 @@
+---
+# handlers file for mailme
+ - name: release service
+   service:
+     name: mailme
+     enable: yes
+     state: started
+...
